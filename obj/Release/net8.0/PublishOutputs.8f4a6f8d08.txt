@@ -1,0 +1,12 @@
+C:\proj\out\proj.exe
+C:\proj\out\appsettings.Development.json
+C:\proj\out\appsettings.json
+C:\proj\out\proj.dll
+C:\proj\out\proj.deps.json
+C:\proj\out\proj.runtimeconfig.json
+C:\proj\out\proj.pdb
+C:\proj\out\Microsoft.AspNetCore.OpenApi.dll
+C:\proj\out\Microsoft.OpenApi.dll
+C:\proj\out\Swashbuckle.AspNetCore.Swagger.dll
+C:\proj\out\Swashbuckle.AspNetCore.SwaggerGen.dll
+C:\proj\out\Swashbuckle.AspNetCore.SwaggerUI.dll
