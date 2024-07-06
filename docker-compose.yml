@@ -1,0 +1,14 @@
+version: '3.8'
+
+services:
+  app:    
+    environment:
+      - ASPNETCORE_URLS=http://+:80
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: my_dotnet_app
+    ports:
+      - "5010:80"
+
+
