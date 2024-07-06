@@ -1,0 +1,36 @@
+name: pipe line (.net)
+
+
+on:
+  push:                # Запускается при каждом пуше в репозиторий
+    branches: [ main ] # Только при пуше в ветку main
+  pull_request:        # Запускается при создании pull request
+    branches: [ main ] # Только если PR направлен в ветку main
+
+jobs:
+  build:      # Название задания 
+    runs-on: ubuntu-latest #os ubunty tipa last vr 
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2 # Проверка кода 
+
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v2
+      with:
+        dotnet-version: '8.0' # Установка .NET SDK версии 8.0
+
+    - name: Restore dependencies
+      run: dotnet restore # Восстановление зависимостей 
+
+    - name: Build
+      run: dotnet build --configuration Release --no-restore # Сборка проекта в режиме Release без восстановления зависимостей
+
+    - name: Test
+      run: dotnet test --no-restore --verbosity normal # Запуск тестов без восстановления зависимостей с нормальным уровнем вывода
+
+    - name: Publish
+      if: github.ref == 'refs/heads/main' # Публикация артефактов только при пуше в ветку main
+      run: |
+        dotnet publish -c Release -o out # Публикация сборки в папку out
+
