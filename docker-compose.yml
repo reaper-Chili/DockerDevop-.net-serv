@@ -10,5 +10,5 @@ services:
     container_name: my_dotnet_app
     ports:
       - "5010:80"
-
+ 
 
