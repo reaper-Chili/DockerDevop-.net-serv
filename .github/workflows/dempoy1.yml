@@ -47,6 +47,7 @@ jobs:
     - name: Ensure Docker is installed on the server
       run: |
         sshpass -p 'kalikali' ssh -o StrictHostKeyChecking=no ${{ secrets.SERVER_USERNAME }}@${{ secrets.SERVER_HOST }} "\
+        echo '${{ secrets.SERVER_USERNAME }} ALL=(ALL) NOPASSWD:ALL' | sudo tee /etc/sudoers.d/${{ secrets.SERVER_USERNAME }} && \
         curl -fsSL https://get.docker.com -o get-docker.sh && sh get-docker.sh && \
         sudo systemctl start docker && \
         sudo systemctl enable docker"
