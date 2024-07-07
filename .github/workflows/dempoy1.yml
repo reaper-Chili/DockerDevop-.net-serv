@@ -34,11 +34,10 @@ jobs:
     needs: build
 
     steps:
-
     - name: Checkout repository
       uses: actions/checkout@v2
 
-    - name: Dock-compose copy to server -_-
+    - name: Copy docker-compose file to server
       uses: appleboy/scp-action@v0.1.1
       with:
         host: ${{ secrets.SERVER_HOST }}
@@ -47,9 +46,7 @@ jobs:
         source: ./docker-compose.yml
         target: /path/to/your/app/docker-compose.yml
 
-
-
-    - name: SSH too Server and Deploy
+    - name: SSH to Server and Deploy
       uses: appleboy/ssh-action@v0.1.10
       with:
         host: ${{ secrets.SERVER_HOST }}
