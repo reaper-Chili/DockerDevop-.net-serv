@@ -1,0 +1,33 @@
+name: Deploy to Server
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    - name: Install sshpass
+      run: sudo apt-get update && sudo apt-get install -y sshpass
+
+    - name: Start Docker and SSH daemons on server
+      run: |
+        sshpass -p '${{ secrets.ROOT_PASSWORD }}' ssh -o StrictHostKeyChecking=no root@${{ secrets.SERVER_HOST }} "\
+        systemctl start docker && \
+        systemctl start sshd && \
+        systemctl enable docker && \
+        systemctl enable sshd"
+
+    - name: SSH into server and deploy
+      run: |
+        sshpass -p '${{ secrets.ROOT_PASSWORD }}' ssh -o StrictHostKeyChecking=no root@${{ secrets.SERVER_HOST }} "\
+        cd /path/to/your/app && \
+        docker-compose down && \
+        docker-compose pull && \
+        docker-compose up -d"
