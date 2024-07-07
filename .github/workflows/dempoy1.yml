@@ -48,7 +48,7 @@ jobs:
       run: |
           sshpass -p 'kalikali' ssh -o StrictHostKeyChecking=no ${{ secrets.SERVER_USERNAME }}@${{ secrets.SERVER_HOST }} << 'EOF'
           set -e
-          cd /home/${{ secrets.SERVER_USERNAME }}/app
+          cd /home/{{ secrets.SERVER_USERNAME }}/app
           echo "Running docker-compose down"
           docker-compose down
           echo "Running docker-compose pull"
