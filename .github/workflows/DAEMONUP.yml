@@ -13,20 +13,15 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v3
 
-    - name: Install sshpass
-      run: sudo apt-get update && sudo apt-get install -y sshpass
-
     - name: Copy docker-compose file to server
       run: |
         sshpass -p '${{ secrets.ROOT_PASSWORD }}' scp -o StrictHostKeyChecking=no ./docker-compose.yml root@${{ secrets.SERVER_HOST }}:/home/root/app/docker-compose.yml
 
-    - name: Ensure Docker is installed and running on server
+    - name: Start Docker and SSH daemons on server
       run: |
         sshpass -p '${{ secrets.ROOT_PASSWORD }}' ssh -o StrictHostKeyChecking=no root@${{ secrets.SERVER_HOST }} "\
-        echo '${{ secrets.ROOT_PASSWORD }}' | sudo -S apt-get update && \
-        echo '${{ secrets.ROOT_PASSWORD }}' | sudo -S apt-get install -y docker.io && \
         echo '${{ secrets.ROOT_PASSWORD }}' | sudo -S systemctl start docker && \
-        echo '${{ secrets.ROOT_PASSWORD }}' | sudo -S systemctl enable docker"
+        echo '${{ secrets.ROOT_PASSWORD }}' | sudo -S systemctl start sshd"
 
     - name: SSH into server and deploy
       run: |
