@@ -5,8 +5,9 @@ services:
     environment:
       - ASPNETCORE_URLS=http://+:80
     build:
-      context: .
-      dockerfile: https://hub.docker.com/repository/docker/${{ secrets.DOCKER_USERNAME }}/my-app/general
+  exim:
+    image: adm1n1strati0n2/program2.cs:latest
+
     container_name: my_dotnet_app
     ports:
       - "5010:80"
