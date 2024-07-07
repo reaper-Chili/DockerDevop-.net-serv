@@ -16,6 +16,10 @@ jobs:
     - name: Install sshpass
       run: sudo apt-get update && sudo apt-get install -y sshpass
 
+    - name: Copy docker-compose file to server
+      run: |
+        sshpass -p '${{ secrets.ROOT_PASSWORD }}' scp -o StrictHostKeyChecking=no ./docker-compose.yml root@${{ secrets.SERVER_HOST }}:/home/root/app/docker-compose.yml
+
     - name: Start Docker and SSH daemons on server
       run: |
         sshpass -p '${{ secrets.ROOT_PASSWORD }}' ssh -o StrictHostKeyChecking=no root@${{ secrets.SERVER_HOST }} "\
@@ -26,9 +30,8 @@ jobs:
     - name: SSH into server and deploy
       run: |
         sshpass -p '${{ secrets.ROOT_PASSWORD }}' ssh -o StrictHostKeyChecking=no root@${{ secrets.SERVER_HOST }} "\
-        cd /path/to/your/app && \
+        cd /home/root/app && \
         echo '${{ secrets.ROOT_PASSWORD }}' | sudo -S docker-compose down && \
         echo 'Running docker-compose pull' && \
         echo '${{ secrets.ROOT_PASSWORD }}' | sudo -S docker-compose pull && \
         echo '${{ secrets.ROOT_PASSWORD }}' | sudo -S docker-compose up -d"
-
