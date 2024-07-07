@@ -5,9 +5,7 @@ services:
     environment:
       - ASPNETCORE_URLS=http://+:80
     build:
-  exim:
     image: adm1n1strati0n2/program2.cs:latest
-
     container_name: my_dotnet_app
     ports:
       - "5010:80"
