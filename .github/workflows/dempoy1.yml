@@ -44,7 +44,7 @@ jobs:
         username: ${{ secrets.SERVER_USERNAME }}
         key: ${{ secrets.SERVER_SSH_KEY }}
         source: ./docker-compose.yml
-        target: /path/to/your/app/docker-compose.yml
+        target: ./path/to/your/app/docker-compose.yml
         strip_components: 0
         overwrite: true
         debug: true
@@ -56,7 +56,7 @@ jobs:
         username: ${{ secrets.SERVER_USERNAME }}
         key: ${{ secrets.SERVER_SSH_KEY }}
         script: |
-          cd /path/to/your/app
+          cd ./path/to/your/app
           docker-compose pull
           docker-compose up -d
         debug: true
