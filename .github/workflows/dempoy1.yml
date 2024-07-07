@@ -46,13 +46,13 @@ jobs:
 
     - name: SSH into server and deploy
       run: |
-          sshpass -p 'kalikali' ssh -o StrictHostKeyChecking=no ${{ secrets.SERVER_USERNAME }}@${{ secrets.SERVER_HOST }} << 'EOF'
+          sshpass -p 'kalikali' ssh -o StrictHostKeyChecking=no ${{ secrets.SERVER_USERNAME }}@${{ secrets.SERVER_HOST }} 
           set -e
-          cd /home/{ { secrets.SERVER_USERNAME } }/app
-          echo "Running docker-compose down"
-          docker-compose down
-          echo "Running docker-compose pull"
-          docker-compose pull
-          echo "Running docker-compose up -d"
-          docker-compose up -d
-          EOF
+          cd /home/{ { secrets.SERVER_USERNAME } }/app\
+          echo "Running docker-compose down"\
+          docker-compose down\
+          echo "Running docker-compose pull"\
+          docker-compose pull\
+          echo "Running docker-compose up -d"\
+          docker-compose up -d\
+         
