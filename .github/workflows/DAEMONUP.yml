@@ -20,11 +20,12 @@ jobs:
       run: |
         sshpass -p '${{ secrets.ROOT_PASSWORD }}' scp -o StrictHostKeyChecking=no ./docker-compose.yml root@${{ secrets.SERVER_HOST }}:/home/root/app/docker-compose.yml
 
-    - name: Start Docker and SSH daemons on server
+    - name: Ensure Docker is installed and running on server
       run: |
         sshpass -p '${{ secrets.ROOT_PASSWORD }}' ssh -o StrictHostKeyChecking=no root@${{ secrets.SERVER_HOST }} "\
+        echo '${{ secrets.ROOT_PASSWORD }}' | sudo -S apt-get update && \
+        echo '${{ secrets.ROOT_PASSWORD }}' | sudo -S apt-get install -y docker.io && \
         echo '${{ secrets.ROOT_PASSWORD }}' | sudo -S systemctl start docker && \
-        echo '${{ secrets.ROOT_PASSWORD }}' | sudo -S systemctl start ssh && \
         echo '${{ secrets.ROOT_PASSWORD }}' | sudo -S systemctl enable docker"
 
     - name: SSH into server and deploy
