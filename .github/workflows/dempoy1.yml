@@ -42,24 +42,23 @@ jobs:
 
     - name: Copy docker-compose file to server
       run: |
-        sshpass -p 'kalikali' scp -o StrictHostKeyChecking=no ./docker-compose.yml ${{ secrets.SERVER_USERNAME }}@${{ secrets.SERVER_HOST }}:/home/${{ secrets.SERVER_USERNAME }}/app/docker-compose.yml
+        sshpass -p '${{ secrets.SERVER_PASSWORD }}' scp -o StrictHostKeyChecking=no ./docker-compose.yml smith@${{ secrets.SERVER_HOST }}:/home/smith/app/docker-compose.yml
 
     - name: Ensure Docker is installed on the server
       run: |
-        sshpass -p 'kalikali' ssh -o StrictHostKeyChecking=no ${{ secrets.SERVER_USERNAME }}@${{ secrets.SERVER_HOST }} "\
-        echo '${{ secrets.SERVER_USERNAME }} ALL=(ALL) NOPASSWD:ALL' | sudo tee /etc/sudoers.d/${{ secrets.SERVER_USERNAME }} && \
-        curl -fsSL https://get.docker.com -o get-docker.sh && sh get-docker.sh && \
-        sudo systemctl start docker && \
-        sudo systemctl enable docker"
+        sshpass -p '${{ secrets.SERVER_PASSWORD }}' ssh -o StrictHostKeyChecking=no smith@${{ secrets.SERVER_HOST }} "\
+        echo '${{ secrets.SERVER_PASSWORD }}' | sudo -S curl -fsSL https://get.docker.com -o get-docker.sh && \
+        echo '${{ secrets.SERVER_PASSWORD }}' | sudo -S sh get-docker.sh && \
+        echo '${{ secrets.SERVER_PASSWORD }}' | sudo -S systemctl start docker && \
+        echo '${{ secrets.SERVER_PASSWORD }}' | sudo -S systemctl enable docker"
 
     - name: SSH into server and deploy
       run: |
-        sshpass -p 'kalikali' ssh -o StrictHostKeyChecking=no ${{ secrets.SERVER_USERNAME }}@${{ secrets.SERVER_HOST }} "\
+        sshpass -p '${{ secrets.SERVER_PASSWORD }}' ssh -o StrictHostKeyChecking=no smith@${{ secrets.SERVER_HOST }} "\
         set -e && \
-        cd /home/{{secrets.SERVER_USERNAME}}/app && \
-        echo 'Running docker-compose down' && \
-        docker-compose down && \
+        cd /home/smith/app && \
+        echo '${{ secrets.SERVER_PASSWORD }}' | sudo -S docker-compose down && \
         echo 'Running docker-compose pull' && \
-        docker-compose pull && \
-        echo 'Running docker-compose up -d' && \
-        docker-compose up -d"
+        echo '${{ secrets.SERVER_PASSWORD }}' | sudo -S docker-compose pull && \
+        echo '${{ secrets.SERVER_PASSWORD }}' | sudo -S docker-compose up -d"
+
