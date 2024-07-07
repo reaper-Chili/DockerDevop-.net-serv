@@ -46,7 +46,7 @@ jobs:
 
     - name: SSH into server and deploy
       run: |
-        sshpass -p 'kalikali' ssh -o StrictHostKeyChecking=no ${{ secrets.SERVER_USERNAME }}@${{ secrets.SERVER_HOST }} '
+        sshpass -p 'kalikali' ssh -o StrictHostKeyChecking=no ${{ secrets.SERVER_USERNAME }}@${{ secrets.SERVER_HOST }} 
           cd /home/${{ secrets.SERVER_USERNAME }}/app
           docker-compose down
           docker-compose pull
