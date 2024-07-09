@@ -37,11 +37,6 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Install sshpass with retry
-        run: |
-          sudo apt-get update || sudo apt-get update
-          for i in {1..5}; do sudo apt-get install -y sshpass && break || sleep 10; done
-
       - name: Copy docker-compose file to server
         run: |
           sshpass -p 'kalikali' scp -o StrictHostKeyChecking=no ./docker-compose.yml ${{ secrets.SERVER_USERNAME }}@${{ secrets.SERVER_HOST }}:/home/${{ secrets.SERVER_USERNAME }}/app/docker-compose.yml
