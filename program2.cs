@@ -1,8 +1,11 @@
+// Write the corrected content to program2.cs
+string correctedContent = @"
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddAuthorization(); // Add this line to register authorization services
 
 // Build the app
 var app = builder.Build();
@@ -24,16 +27,16 @@ app.UseSwaggerUI(c =>
 });
 
 app.UseRouting();
-app.UseAuthorization();
+app.UseAuthorization(); // Ensure this line is present
 
 app.MapControllers();
 
 var summaries = new[]
 {
-    "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
+    ""Freezing"", ""Bracing"", ""Chilly"", ""Cool"", ""Mild"", ""Warm"", ""Balmy"", ""Hot"", ""Sweltering"", ""Scorching""
 };
 
-app.MapGet("/weatherforecast", () =>
+app.MapGet(""/weatherforecast"", () =>
 {
     var forecast = Enumerable.Range(1, 5).Select(index =>
         new WeatherForecast
@@ -45,7 +48,7 @@ app.MapGet("/weatherforecast", () =>
         .ToArray();
     return forecast;
 })
-.WithName("GetWeatherForecast")
+.WithName(""GetWeatherForecast"")
 .WithOpenApi();
 
 app.Run();
@@ -54,5 +57,6 @@ record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
 {
     public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
 }
-    public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
-}
+";
+
+
