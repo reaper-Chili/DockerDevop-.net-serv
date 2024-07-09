@@ -10,55 +10,57 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v3
+      - name: Checkout repository
+        uses: actions/checkout@v3
 
-    - name: Set up Docker Buildx
-      uses: docker/setup-buildx-action@v2
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
 
-    - name: Log in to Docker Hub
-      uses: docker/login-action@v2
-      with:
-        username: ${{ secrets.DOCKER_USERNAME }}
-        password: ${{ secrets.DOCKER_PASSWORD }}
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
 
-    - name: Build and push Docker image
-      uses: docker/build-push-action@v5
-      with:
-        context: .
-        push: true
-        tags: ${{ secrets.DOCKER_USERNAME }}/my-app:latest
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          push: true
+          tags: ${{ secrets.DOCKER_USERNAME }}/my-app:latest
 
   deploy:
     runs-on: ubuntu-latest
     needs: build-and-push
 
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v3
+      - name: Checkout repository
+        uses: actions/checkout@v3
 
-    - name: Install sshpass
-      run: sudo apt-get update && sudo apt-get install -y sshpass
+      - name: Install sshpass with retry
+        run: |
+          sudo apt-get update || sudo apt-get update
+          for i in {1..5}; do sudo apt-get install -y sshpass && break || sleep 10; done
 
-    - name: Copy docker-compose file to server
-      run: |
-        sshpass -p '${{ secrets.SERVER_PASSWORD }}' scp -o StrictHostKeyChecking=no ./docker-compose.yml smith@${{ secrets.SERVER_HOST }}:/home/smith/app/docker-compose.yml
+      - name: Copy docker-compose file to server
+        run: |
+          sshpass -p 'kalikali' scp -o StrictHostKeyChecking=no ./docker-compose.yml ${{ secrets.SERVER_USERNAME }}@${{ secrets.SERVER_HOST }}:/home/${{ secrets.SERVER_USERNAME }}/app/docker-compose.yml
 
-    - name: Ensure Docker is installed on the server
-      run: |
-        sshpass -p '${{ secrets.SERVER_PASSWORD }}' ssh -o StrictHostKeyChecking=no smith@${{ secrets.SERVER_HOST }} "\
-        echo '${{ secrets.SERVER_PASSWORD }}' | sudo -S curl -fsSL https://get.docker.com -o get-docker.sh && \
-        echo '${{ secrets.SERVER_PASSWORD }}' | sudo -S sh get-docker.sh && \
-        echo '${{ secrets.SERVER_PASSWORD }}' | sudo -S systemctl start docker && \
-        echo '${{ secrets.SERVER_PASSWORD }}' | sudo -S systemctl enable docker"
+      - name: Copy other necessary files to server
+        run: |
+          sshpass -p 'kalikali' scp -o StrictHostKeyChecking=no -r ./other-necessary-files/ ${{ secrets.SERVER_USERNAME }}@${{ secrets.SERVER_HOST }}:/home/${{ secrets.SERVER_USERNAME }}/app/
 
-    - name: SSH into server and deploy
-      run: |
-        sshpass -p '${{ secrets.SERVER_PASSWORD }}' ssh -o StrictHostKeyChecking=no smith@${{ secrets.SERVER_HOST }} "\
-        set -e && \
-        cd /home/smith/app && \
-        echo '${{ secrets.SERVER_PASSWORD }}' | sudo -S docker-compose down && \
-        echo 'Running docker-compose pull' && \
-        echo '${{ secrets.SERVER_PASSWORD }}' | sudo -S docker-compose pull && \
-        echo '${{ secrets.SERVER_PASSWORD }}' | sudo -S docker-compose up -d"
-
+      - name: SSH into server and deploy
+        run: |
+          sshpass -p 'kalikali' ssh -o StrictHostKeyChecking=no ${{ secrets.SERVER_USERNAME }}@${{ secrets.SERVER_HOST }} << 'EOF'
+          set -e  # Exit immediately if a command exits with a non-zero status
+          echo "Creating app directory if it doesn't exist"
+          mkdir -p /home/${{ secrets.SERVER_USERNAME }}/app
+          cd /home/${{ secrets.SERVER_USERNAME }}/app
+          echo "Running docker-compose down"
+          docker-compose down
+          echo "Running docker-compose pull"
+          docker-compose pull
+          echo "Running docker-compose up -d"
+          docker-compose up -d
+          EOF
