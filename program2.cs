@@ -1,12 +1,9 @@
-# Saving the corrected content back to 'program2.cs' file
-
-corrected_content = """
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services.AddAuthorization(); // Add this line to register authorization services
+builder.Services.AddAuthorization(); // Добавьте эту строку
 
 // Build the app
 var app = builder.Build();
@@ -28,7 +25,7 @@ app.UseSwaggerUI(c =>
 });
 
 app.UseRouting();
-app.UseAuthorization(); // Ensure this line is present
+app.UseAuthorization(); // Убедитесь, что эта строка присутствует
 
 app.MapControllers();
 
@@ -40,11 +37,13 @@ var summaries = new[]
 app.MapGet("/weatherforecast", () =>
 {
     var forecast = Enumerable.Range(1, 5).Select(index =>
-        new WeatherForecast(
+        new WeatherForecast
+        (
             DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
             Random.Shared.Next(-20, 55),
             summaries[Random.Shared.Next(summaries.Length)]
-        )).ToArray();
+        ))
+        .ToArray();
     return forecast;
 })
 .WithName("GetWeatherForecast")
@@ -56,5 +55,3 @@ record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
 {
     public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
 }
-"""
-
