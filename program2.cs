@@ -3,7 +3,6 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services.AddAuthorization(); // Add this line to register authorization services
 
 // Build the app
 var app = builder.Build();
@@ -25,7 +24,7 @@ app.UseSwaggerUI(c =>
 });
 
 app.UseRouting();
-app.UseAuthorization(); // Ensure this line is present
+app.UseAuthorization();
 
 app.MapControllers();
 
@@ -55,6 +54,5 @@ record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
 {
     public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
 }
-{
     public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
 }
