@@ -5,7 +5,7 @@ services:
     image: my_dotnet
     build:
       context: .
-      dockerfile: ${{ secrets.DOCKER_USERNAME }}/my-app
+      dockerfile: adm1n1strati0n2/my-app
     ports:
       - "5010:80"
     environment:
