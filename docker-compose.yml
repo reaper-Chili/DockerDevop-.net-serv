@@ -2,10 +2,10 @@ version: '3.8'
 
 services:
   my_dotnet_app:
-    image: my_dotnet
+    image: adm1n1strati0n2/my-app
     build:
       context: .
-      dockerfile: adm1n1strati0n2/my-app
+      dockerfile: Dockerfile
     ports:
       - "5010:80"
     environment:
