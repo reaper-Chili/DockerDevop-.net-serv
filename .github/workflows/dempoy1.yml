@@ -39,11 +39,11 @@ jobs:
 
       - name: Copy docker-compose file to server
         run: |
-          sshpass -p 'kalikali' scp -o StrictHostKeyChecking=no ./docker-compose.yml ${{ secrets.SERVER_USERNAME }}@${{ secrets.SERVER_HOST }}:/home/${{ secrets.SERVER_USERNAME }}/app/docker-compose.yml
+          sshpass -p ${{ secrets.ROOT_PASSWORD }} scp -o StrictHostKeyChecking=no ./docker-compose.yml ${{ secrets.SERVER_USERNAME }}@${{ secrets.SERVER_HOST }}:/home/${{ secrets.SERVER_USERNAME }}/app/docker-compose.yml
 
       - name: SSH into server and deploy
         run: |
-          sshpass -p 'kalikali' ssh -o StrictHostKeyChecking=no ${{ secrets.SERVER_USERNAME }}@${{ secrets.SERVER_HOST }} << 'EOF'
+          sshpass -p ${{ secrets.ROOT_PASSWORD }} ssh -o StrictHostKeyChecking=no ${{ secrets.SERVER_USERNAME }}@${{ secrets.SERVER_HOST }} << 'EOF'
           set -e  # Exit immediately if a command exits with a non-zero status
           echo "Creating app directory if it doesn't exist"
           mkdir -p /home/${{ secrets.SERVER_USERNAME }}/app

@@ -5,9 +5,9 @@ services:
     image: my_dotnet
     build:
       context: .
-      dockerfile: Dockerfile
+      dockerfile: ${{ secrets.DOCKER_USERNAME }}/my-app
     ports:
-      - "5000:80"
+      - "5010:80"
     environment:
       - ASPNETCORE_URLS=http://+:80
 
